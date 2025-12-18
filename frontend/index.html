@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>X-ray Visualizer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+      text-align: center;
+    }
+
+    .container {
+      margin-top: 30px;
+    }
+
+    img {
+      margin-top: 20px;
+      max-width: 300px;
+      border: 2px solid #555;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>X-ray Upload Test</h1>
+
+  <input type="file" id="fileInput" />
+  <br><br>
+  <button onclick="uploadImage()">Upload</button>
+
+  <div class="container">
+    <h2>Original X-ray</h2>
+    <img id="outputImage" />
+  </div>
+
+  <script>
+    async function uploadImage() {
+      const fileInput = document.getElementById("fileInput");
+      const file = fileInput.files[0];
+
+      if (!file) {
+        alert("Please select an image first");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("http://127.0.0.1:8000/upload", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await response.json();
+
+      document.getElementById("outputImage").src =
+        "data:image/png;base64," + data.image;
+    }
+  </script>
+
+</body>
+</html>
